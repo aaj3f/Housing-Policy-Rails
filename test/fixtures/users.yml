@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ip_address: 
+  zipcode: 
+  salary: 
+  rent_cost: 1
+
+two:
+  ip_address: 
+  zipcode: 
+  salary: 
+  rent_cost: 1
