@@ -14,6 +14,8 @@ require "action_cable/engine"
 require "rails/test_unit/railtie"
 require "json"
 require "net/http"
+require "roo"
+require "roo-xls"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

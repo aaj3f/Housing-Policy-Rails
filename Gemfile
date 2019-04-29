@@ -31,6 +31,10 @@ gem 'rack-cors'
 #Use dotenv to protect API keys from public display on github
 gem 'dotenv-rails', groups: [:development, :test]
 
+#Use roo to import Fair Market Rent .xls file to db
+gem "roo", "~> 2.7.0"
+gem "roo-xls"
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
