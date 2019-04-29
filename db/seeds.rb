@@ -14,3 +14,11 @@ if FreeMarketRentInfo.all.size == 0
     FreeMarketRentInfo.create(hash)
   end
 end
+
+if ZipCode.all.size == 0
+  csv = Roo::Spreadsheet.open('./ZIP-COUNTY-FIPS_2017-06.csv', extension: :csv)
+  sheet = csv.sheet(0)
+  sheet.each(zipcode: 'ZIP', county: 'COUNTYNAME', state: 'STATE') do |hash|
+    ZipCode.create(hash)
+  end
+end
