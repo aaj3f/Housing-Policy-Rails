@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  state: MyString
+  county: MyString
+  fmr0: 1
+  fmr1: 1
+  fmr2: 1
+  fmr3: 1
+  fmr4: 1
+
+two:
+  state: MyString
+  county: MyString
+  fmr0: 1
+  fmr1: 1
+  fmr2: 1
+  fmr3: 1
+  fmr4: 1

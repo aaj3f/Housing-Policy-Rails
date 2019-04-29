@@ -1,0 +1,2 @@
+class FreeMarketRentInfo < ApplicationRecord
+end
