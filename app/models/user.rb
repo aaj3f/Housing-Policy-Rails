@@ -10,4 +10,9 @@ class User < ApplicationRecord
     median_income = json_response[1][0]
     median_income
   end
+
+  # TODO: change so that median income is persisted
+  def qualifies_for_warren?
+    self.salary < 1.2 * self.calculate_median_income.to_i
+  end
 end
