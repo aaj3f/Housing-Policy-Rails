@@ -63,7 +63,7 @@ class User < ApplicationRecord
     thirty_percent_monthly_income = (self.salary / 12) * 0.3
     rent_cost = self.rent_cost + self.utilities
     excess_rent_costs = rent_cost - thirty_percent_monthly_income
-    excess_rent_costs * credit_modifier
+    excess_rent_costs > 0 ? excess_rent_costs * credit_modifier : 0
   end
 
 end
