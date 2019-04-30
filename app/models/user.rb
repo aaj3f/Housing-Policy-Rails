@@ -33,4 +33,17 @@ class User < ApplicationRecord
   def qualifies_for_warren?
     self.salary < 1.2 * self.median_income
   end
+
+  def qualifies_for_booker?
+    (self.salary / 12) * 0.3 < self.rent_cost
+    # TODO: the user qualifies for booker if...
+      #... 30% of monthly income is LESS THAN monthly rent
+      #... HOWEVER maximum payout == 30% monthly income MINUS fmr (and NOT monthly rent MINUS fmr)
+  end
+
+  def calculate_booker_credit
+    rent_evaluation = [self.rent_cost, self.fmr].min
+    thirty_percent_monthly_income = (self.salary / 12) * 0.3
+    (thirty_percent_monthly_income - rent_evaluation).abs.round(2)
+  end
 end
