@@ -11,6 +11,25 @@ class User < ApplicationRecord
     self.update(median_income: median_income.to_i)
   end
 
+  def calculate_fmr
+    case self.bedrooms
+    when 0
+      fmr_column = 'fmr0'
+    when 1
+      fmr_column = 'fmr1'
+    when 2
+      fmr_column = 'fmr2'
+    when 3
+      fmr_column = 'fmr3'
+    when 4
+      fmr_column = 'fmr4'
+    end
+    zip_info = ZipCode.find_by(zipcode: self.zipcode)
+    fmr_info = FreeMarketRentInfo.find_by(state: zip_info.state, county: zip_info.county)
+    fmr = fmr_info[fmr_column]
+    self.update(fmr: fmr, state: zip_info.state, county: zip_info.county)
+  end
+
   def qualifies_for_warren?
     self.salary < 1.2 * self.median_income
   end
