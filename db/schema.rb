@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_30_150415) do
+ActiveRecord::Schema.define(version: 2019_04_30_154937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "free_market_rent_infos", force: :cascade do |t|
-    t.string "state"
-    t.string "county"
+    t.integer "state"
+    t.integer "county"
     t.integer "fmr0"
     t.integer "fmr1"
     t.integer "fmr2"
@@ -44,10 +44,11 @@ ActiveRecord::Schema.define(version: 2019_04_30_150415) do
 
   create_table "zip_codes", force: :cascade do |t|
     t.integer "zipcode"
-    t.string "county"
-    t.string "state"
+    t.integer "county"
+    t.integer "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "fips"
   end
 
 end

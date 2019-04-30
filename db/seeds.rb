@@ -10,18 +10,37 @@
 if FreeMarketRentInfo.all.size == 0
   xls = Roo::Excel.new("./FY2015F_4050_Final.xls")
   sheet = xls.sheet(0)
-  sheet.each(state: 'state_alpha', county: 'countyname', fmr0: 'fmr0', fmr1: 'fmr1', fmr2: 'fmr2', fmr3: 'fmr3', fmr4: 'fmr4') do |hash|
+  sheet.each(state: 'State', county: 'county', fmr0: 'fmr0', fmr1: 'fmr1', fmr2: 'fmr2', fmr3: 'fmr3', fmr4: 'fmr4') do |hash|
     FreeMarketRentInfo.create(hash)
   end
+  FreeMarketRentInfo.all.first.destroy
 end
 
 if ZipCode.all.size == 0
   csv = Roo::Spreadsheet.open('./ZIP-COUNTY-FIPS_2017-06.csv', extension: :csv)
   sheet = csv.sheet(0)
-  sheet.each(zipcode: 'ZIP', county: 'COUNTYNAME', state: 'STATE') do |hash|
-    ZipCode.create(hash)
+  sheet.each(zipcode: 'ZIP', fips: 'STCOUNTYFP') do |hash|
+    string = hash[:fips].dup
+    county = string.slice!(-3, 3)
+    state = string
+    new_hash = { state: state, county: county }
+    ZipCode.create(hash.merge(new_hash))
   end
+  ZipCode.all.first.destroy
 end
+
+# items = FreeMarketRentInfo.all.select {|item| item.zipcode == nil }
+#
+# items.each do |item|
+#   match = ZipCode.find_by(state: item.state, county: item.county)
+#   if match
+#     zipcode = match.zipcode
+#     item.update(zipcode: zipcode)
+#   else
+#     puts "no match for FreeMarketRentInfo row with id: #{item.id}"
+#   end
+# end
+
 
 # TODO: iterate through each FreeMarketRentInfo row, find ZipCode row with same county and state,
 # and add zipcode to FreeMarketRentInfo row
