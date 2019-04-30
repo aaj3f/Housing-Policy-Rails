@@ -36,14 +36,34 @@ class User < ApplicationRecord
 
   def qualifies_for_booker?
     (self.salary / 12) * 0.3 < self.rent_cost
-    # TODO: the user qualifies for booker if...
-      #... 30% of monthly income is LESS THAN monthly rent
-      #... HOWEVER maximum payout == 30% monthly income MINUS fmr (and NOT monthly rent MINUS fmr)
+  end
+
+  def qualifies_for_harris?
+    (self.rent_cost < self.fmr * 1.5) && self.salary <= 100000
   end
 
   def calculate_booker_credit
+    return 0 unless self.qualifies_for_booker?
     rent_evaluation = [self.rent_cost, self.fmr].min
     thirty_percent_monthly_income = (self.salary / 12) * 0.3
     (thirty_percent_monthly_income - rent_evaluation).abs.round(2)
   end
+
+  def calculate_harris_credit
+    return 0 unless self.qualifies_for_harris?
+    if (75000 < self.salary && self.salary <= 100000)
+      credit_modifier = 0.25
+    elsif (50000 < self.salary && self.salary <= 75000)
+      credit_modifier = 0.5
+    elsif (25000 < self.salary && self.salary <= 50000)
+      credit_modifier = 0.75
+    else
+      credit_modifier = 1
+    end
+    thirty_percent_monthly_income = (self.salary / 12) * 0.3
+    rent_cost = self.rent_cost + self.utilities
+    excess_rent_costs = rent_cost - thirty_percent_monthly_income
+    excess_rent_costs * credit_modifier
+  end
+
 end
