@@ -22,3 +22,7 @@ if ZipCode.all.size == 0
     ZipCode.create(hash)
   end
 end
+
+# TODO: iterate through each FreeMarketRentInfo row, find ZipCode row with same county and state,
+# and add zipcode to FreeMarketRentInfo row
+# That requires a new column in FreeMarketRentInfo
