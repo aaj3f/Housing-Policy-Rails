@@ -1,4 +1,18 @@
 class User < ApplicationRecord
+  after_create do |user|
+    user.calculate_median_income
+    user.calculate_fmr
+    if [user.qualifies_for_warren?, user.qualifies_for_booker?, user.qualifies_for_harris?].any? { |flag| flag }
+      puts "You qualify for benefits under the following candidate\'s policies: "
+      puts "\tElizabeth Warren" if user.qualifies_for_warren?
+      puts "\tCory Booker" if user.qualifies_for_booker?
+      puts "\tKamala Harris" if user.qualifies_for_harris?
+    else
+      puts "You don\'t seem to qualify for benefits under any of the housing crisis policies proposed so far."
+    end
+    user.calculate_booker_credit if user.qualifies_for_booker?
+    user.calculate_harris_credit if user.qualifies_for_harris?
+  end
 
   def calculate_median_income
     base_url = 'https://api.census.gov'
@@ -35,7 +49,7 @@ class User < ApplicationRecord
   end
 
   def qualifies_for_booker?
-    (self.salary / 12) * 0.3 < self.rent_cost
+    (self.salary / 12) * 0.3 < self.rent_cost && (self.salary / 12) * 0.3 < self.fmr
   end
 
   def qualifies_for_harris?
@@ -44,9 +58,12 @@ class User < ApplicationRecord
 
   def calculate_booker_credit
     return 0 unless self.qualifies_for_booker?
-    rent_evaluation = [self.rent_cost, self.fmr].min
     thirty_percent_monthly_income = (self.salary / 12) * 0.3
-    (thirty_percent_monthly_income - rent_evaluation).abs.round(2)
+    rent_evaluation = [self.rent_cost, self.fmr].min
+    excess_rent_costs = rent_evaluation - thirty_percent_monthly_income
+    credit = excess_rent_costs > 0 ? excess_rent_costs.round(2) : 0
+    puts "Cory Booker's policy would provide you a tax credit of $#{credit} / month" if credit > 0
+    credit
   end
 
   def calculate_harris_credit
@@ -63,7 +80,9 @@ class User < ApplicationRecord
     thirty_percent_monthly_income = (self.salary / 12) * 0.3
     rent_cost = self.rent_cost + self.utilities
     excess_rent_costs = rent_cost - thirty_percent_monthly_income
-    excess_rent_costs > 0 ? excess_rent_costs * credit_modifier : 0
+    credit = excess_rent_costs > 0 ? (excess_rent_costs * credit_modifier).round(2) : 0
+    puts "Kamala Harris's policy would provide you a tax credit of $#{credit} / month" if credit > 0
+    credit
   end
 
 end

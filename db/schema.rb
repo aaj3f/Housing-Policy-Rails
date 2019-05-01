@@ -25,12 +25,12 @@ ActiveRecord::Schema.define(version: 2019_04_30_191619) do
     t.integer "fmr4"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "zipcode"
+    t.string "zipcode"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "ip_address"
-    t.integer "zipcode"
+    t.string "zipcode"
     t.integer "salary"
     t.integer "rent_cost"
     t.datetime "created_at", null: false
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2019_04_30_191619) do
   end
 
   create_table "zip_codes", force: :cascade do |t|
-    t.integer "zipcode"
+    t.string "zipcode"
     t.integer "county"
     t.integer "state"
     t.datetime "created_at", null: false

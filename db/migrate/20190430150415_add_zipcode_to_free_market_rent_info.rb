@@ -1,5 +1,5 @@
 class AddZipcodeToFreeMarketRentInfo < ActiveRecord::Migration[5.2]
   def change
-    add_column :free_market_rent_infos, :zipcode, :integer
+    add_column :free_market_rent_infos, :zipcode, :string
   end
 end
