@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: :created, location: @user
+      render json: @user.attributes.merge({ warren: @user.qualifies_for_warren?, bookerCredit: @user.calculate_booker_credit, harrisCredit: @user.calculate_harris_credit }), status: :created, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -46,6 +46,7 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:ip_address, :zipcode, :salary, :rent_cost)
+      puts params
+      params.require(:user).permit(:ip_address, :zipcode, :salary, :rent_cost, :utilities, :bedrooms)
     end
 end
