@@ -16,9 +16,15 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
-
     if @user.save
-      render json: @user.attributes.merge({ warren: @user.qualifies_for_warren?, bookerCredit: @user.calculate_booker_credit, harrisCredit: @user.calculate_harris_credit }), status: :created, location: @user
+      warren = @user.qualifies_for_warren?
+      bookerCredit = @user.calculate_booker_credit
+      harrisCredit = @user.calculate_harris_credit
+      if @user.errors.messages.empty?
+        render json: @user.attributes.merge({ warren: warren, bookerCredit: bookerCredit, harrisCredit: harrisCredit }), status: :created, location: @user
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
     else
       render json: @user.errors, status: :unprocessable_entity
     end

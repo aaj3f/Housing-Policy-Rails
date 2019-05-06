@@ -2,14 +2,6 @@ class User < ApplicationRecord
   after_create do |user|
     user.calculate_median_income
     user.calculate_fmr
-    if [user.qualifies_for_warren?, user.qualifies_for_booker?, user.qualifies_for_harris?].any? { |flag| flag }
-      puts "You qualify for benefits under the following candidate\'s policies: "
-      puts "\tElizabeth Warren" if user.qualifies_for_warren?
-      puts "\tCory Booker" if user.qualifies_for_booker?
-      puts "\tKamala Harris" if user.qualifies_for_harris?
-    else
-      puts "You don\'t seem to qualify for benefits under any of the housing crisis policies proposed so far."
-    end
     user.calculate_booker_credit if user.qualifies_for_booker?
     user.calculate_harris_credit if user.qualifies_for_harris?
   end
@@ -20,7 +12,14 @@ class User < ApplicationRecord
     url = base_url + queries
     uri = URI(url)
     response = Net::HTTP.get(uri)
-    json_response = JSON.parse(response)
+    json_reposne = nil
+    begin
+      json_response = JSON.parse(response)
+    rescue
+      self.errors.add(:median_income, "is not available because of an error with the Census Bureau\'s website.")
+      self.save
+      return
+    end
     median_income = json_response[1][0]
     self.update(median_income: median_income.to_i)
   end
