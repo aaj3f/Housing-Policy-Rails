@@ -2,8 +2,6 @@ class User < ApplicationRecord
   after_create do |user|
     user.calculate_median_income
     user.calculate_fmr
-    user.calculate_booker_credit if user.qualifies_for_booker?
-    user.calculate_harris_credit if user.qualifies_for_harris?
   end
 
   def calculate_median_income
@@ -53,7 +51,7 @@ class User < ApplicationRecord
 
   def qualifies_for_harris?
     # TODO: check on HUD metro area indicator
-    (self.rent_cost < self.fmr * 1.5) && self.salary <= 100000
+    (self.rent_cost < self.fmr * 1.5) && self.salary <= 125000
   end
 
   def calculate_booker_credit
@@ -68,7 +66,7 @@ class User < ApplicationRecord
 
   def calculate_harris_credit
     return 0 unless self.qualifies_for_harris?
-    if (75000 < self.salary && self.salary <= 100000)
+    if (75000 < self.salary && self.salary <= 125000)
       credit_modifier = 0.25
     elsif (50000 < self.salary && self.salary <= 75000)
       credit_modifier = 0.5
