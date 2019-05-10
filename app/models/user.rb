@@ -15,7 +15,6 @@ class User < ApplicationRecord
       json_response = JSON.parse(response)
     rescue
       self.errors.add(:median_income, "is not available because of an error with the Census Bureau\'s website.")
-      self.save
       return
     end
     median_income = json_response[1][0]
