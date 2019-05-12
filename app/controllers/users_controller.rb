@@ -10,7 +10,10 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    harrisGraphData = @user.calculate_harris_graph_data
+    bookerGraphData = @user.calculate_booker_graph_data
+    warrenGraphData = @user.calculate_warren_graph_data
+    render json: @user.attributes.merge({ harrisGraphData: {}, bookerGraphData: {}, warrenGraphData: {} })
   end
 
   # POST /users
