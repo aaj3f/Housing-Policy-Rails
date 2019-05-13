@@ -84,22 +84,22 @@ class User < ApplicationRecord
   end
 
   def calculate_warren_graph_data
-    user = self.qualifies_for_warren? ? self : User.new( self.attributes.merge({ salary: user.median_income - 1000 }) )
+    user = self.qualifies_for_warren? ? self : User.new( self.attributes.merge({ salary: self.median_income - 1000 }) )
     [ user.salary ]
   end
 
   def calculate_booker_graph_data
-    user = (self.qualifies_for_booker? ? self : User.new( self.attributes.merge({ rent_cost: self.fmr, salary: self.fmr * 40 - 1000 }) ) )
-    user2 = User.new( user.attributes.merge({ salary: 0.8 * user.salary }) )
-    user3 = User.new( user.attributes.merge({ salary: 0.6 * user.salary }) )
-    [ { salary: user.salary, credit: user.calculate_booker_credit }, { salary: user2.salary, credit: user2.calculate_booker_credit }, { salary: user3.salary, credit: user3.calculate_booker_credit } ]
+    user_high = (self.qualifies_for_booker? ? self : User.new( self.attributes.merge({ rent_cost: self.fmr, salary: self.fmr * 40 - 1000 }) ) )
+    user_mid = User.new( user_high.attributes.merge({ salary: 0.8 * user_high.salary }) )
+    user_low = User.new( user_high.attributes.merge({ salary: 0.6 * user_high.salary }) )
+    [ { salary: user_low.salary, credit: user_low.calculate_booker_credit }, { salary: user_mid.salary, credit: user_mid.calculate_booker_credit }, { salary: user_high.salary, credit: user_high.calculate_booker_credit } ]
   end
 
   def calculate_harris_graph_data
-    user = (self.qualifies_for_harris? ? self : User.new( self.attributes.merge({ rent_cost: 1.4 * self.fmr, salary: user.median_income - 1000 }) ) )
-    user2 = User.new( user.attributes.merge({ salary: 0.8 * user.salary }) )
-    user3 = User.new( user.attributes.merge({ salary: 0.6 * user.salary }) )
-    [ { salary: user.salary, credit: user.calculate_harris_credit }, { salary: user2.salary, credit: user2.calculate_harris_credit }, { salary: user3.salary, credit: user3.calculate_harris_credit } ]
+    user_high = (self.qualifies_for_harris? ? self : User.new( self.attributes.merge({ rent_cost: 1.4 * self.fmr, salary: self.median_income - 1000 }) ) )
+    user_mid = User.new( user_high.attributes.merge({ salary: 0.8 * user_high.salary }) )
+    user_low = User.new( user_high.attributes.merge({ salary: 0.6 * user_high.salary }) )
+    [ { salary: user_low.salary, credit: user_low.calculate_harris_credit }, { salary: user_mid.salary, credit: user_mid.calculate_harris_credit }, { salary: user_high.salary, credit: user_high.calculate_harris_credit } ]
   end
 
 end
