@@ -84,19 +84,19 @@ class User < ApplicationRecord
   end
 
   def calculate_warren_graph_data
-    self.qualifies_for_warren ? self : User.new( self.attributes.merge({ salary: user.median_income - 1000 }) )
+    user = self.qualifies_for_warren? ? self : User.new( self.attributes.merge({ salary: user.median_income - 1000 }) )
     [ user.salary ]
   end
 
   def calculate_booker_graph_data
-    user = (self.qualifies_for_booker ? self : User.new( self.attributes.merge({ rent_cost: self.fmr, salary: self.fmr * 40 - 1000 }) ) )
+    user = (self.qualifies_for_booker? ? self : User.new( self.attributes.merge({ rent_cost: self.fmr, salary: self.fmr * 40 - 1000 }) ) )
     user2 = User.new( user.attributes.merge({ salary: 0.8 * user.salary }) )
     user3 = User.new( user.attributes.merge({ salary: 0.6 * user.salary }) )
     [ user.calculate_booker_credit, user2.calculate_booker_credit, user3.calculate_booker_credit ]
   end
 
   def calculate_harris_graph_data
-    user = (self.qualifies_for_harris ? self : User.new( self.attributes.merge({ rent_cost: 1.4 * self.fmr, salary: user.median_income - 1000 }) ) )
+    user = (self.qualifies_for_harris? ? self : User.new( self.attributes.merge({ rent_cost: 1.4 * self.fmr, salary: user.median_income - 1000 }) ) )
     user2 = User.new( user.attributes.merge({ salary: 0.8 * user.salary }) )
     user3 = User.new( user.attributes.merge({ salary: 0.6 * user.salary }) )
     [ user.calculate_harris_credit, user2.calculate_harris_credit, user3.calculate_harris_credit ]

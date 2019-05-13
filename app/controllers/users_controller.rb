@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     harrisGraphData = @user.calculate_harris_graph_data
     bookerGraphData = @user.calculate_booker_graph_data
     warrenGraphData = @user.calculate_warren_graph_data
-    render json: @user.attributes.merge({ harrisGraphData: {}, bookerGraphData: {}, warrenGraphData: {} })
+    render json: { harrisGraphData: harrisGraphData, bookerGraphData: bookerGraphData, warrenGraphData: warrenGraphData }
   end
 
   # POST /users
