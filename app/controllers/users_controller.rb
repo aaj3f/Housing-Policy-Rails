@@ -31,10 +31,10 @@ class UsersController < ApplicationController
       if @user.errors.messages.empty?
         render json: @user.attributes.merge({ warren: warren, bookerCredit: bookerCredit, harrisCredit: harrisCredit }), status: :created, location: @user
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: @user.errors, status: :error
       end
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :error
     end
   end
 
