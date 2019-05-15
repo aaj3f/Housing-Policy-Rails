@@ -18,11 +18,16 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    @user = User.new(user_params)
+    @user = User.find_or_initialize_by(user_params)
     if @user.save
-      warren = @user.qualifies_for_warren?
-      bookerCredit = @user.calculate_booker_credit
-      harrisCredit = @user.calculate_harris_credit
+      warren, bookerCredit, harrisCredit = nil, nil, nil
+      begin
+        warren = @user.qualifies_for_warren?
+        bookerCredit = @user.calculate_booker_credit
+        harrisCredit = @user.calculate_harris_credit
+      rescue
+        @user.errors.add(:credits, "are not available because of an error with @user.median_income")
+      end
       if @user.errors.messages.empty?
         render json: @user.attributes.merge({ warren: warren, bookerCredit: bookerCredit, harrisCredit: harrisCredit }), status: :created, location: @user
       else
