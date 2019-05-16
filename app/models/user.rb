@@ -84,8 +84,14 @@ class User < ApplicationRecord
   end
 
   def calculate_warren_graph_data
-    user = self.qualifies_for_warren? ? self : User.new( self.attributes.merge({ salary: self.median_income - 1000 }) )
-    [ user.salary ]
+    if self.qualifies_for_warren?
+      user = self
+      is_user = true
+    else
+      user = User.new( self.attributes.merge({ salary: self.median_income - 1000 }) )
+      is_user = false
+    end
+    { salary: user.salary, flag: is_user }
   end
 
   def calculate_booker_graph_data

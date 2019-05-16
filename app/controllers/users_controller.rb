@@ -19,6 +19,8 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.find_or_initialize_by(user_params)
+    @user.calculate_fmr unless @user.fmr
+    @user.calculate_median_income unless @user.median_income
     if @user.save
       warren, bookerCredit, harrisCredit = nil, nil, nil
       begin
